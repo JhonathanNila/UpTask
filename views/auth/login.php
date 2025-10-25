@@ -1,8 +1,7 @@
 <div class="container login">
-    <h1 class="logo">UpTask</h1>
-    <p class="tagline">Create and Manage your Projects</p>
+    <?php include_once __DIR__ . '/../templates/logo-name.php'; ?>
     <div class="container-sm">
-        <p class="description-page">Login</p>
+        <p class="description-page">Let’s get to work! Log in</p>
         <form action="/" class="form" method="POST">
             <div class="field">
                 <label for="EMAIL">Email</label>
@@ -29,4 +28,4 @@
             <a href="/forgot">Forgot your password?</a>
         </div> <!-- .actions -->
     </div> <!-- .container-sm -->
-</div> <!-- .container -->
+</div> <!-- .container login -->

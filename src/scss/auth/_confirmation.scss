@@ -1,0 +1,9 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.confirmation {
+    margin-top: 5rem;
+    .logo {
+        @include m.gradientText(v.$green, v.$orange);
+    }
+}

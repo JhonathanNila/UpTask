@@ -26,22 +26,30 @@ class LoginController {
             'title' => 'SignUp'
         ]);
     }
-    public static function forgot() {
-        echo "From forget password";
+    public static function forgot(Router $router) {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             
         }
+        $router->render('auth/forgot', [
+            'title' => 'Forgot Password'
+        ]);
     }
-    public static function reset() {
-        echo "From reset password";
+    public static function reset(Router $router) {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             
         }
+        $router->render('auth/reset', [
+            'title' => 'Set a new Password'
+        ]);
     }
-    public static function confirmation() {
-        echo "From confirmation password";
+    public static function confirmation(Router $router) {
+        $router->render('auth/confirmation', [
+            'title' => 'Account Confirmation'
+        ]);
     }
-    public static function welcome() {
-        echo "From welcome password";
+    public static function welcome(Router $router) {
+        $router->render('auth/welcome', [
+            'title' => 'Welcome!'
+        ]);
     }
 }

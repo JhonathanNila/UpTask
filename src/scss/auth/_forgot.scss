@@ -1,20 +1,20 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.login {
+.forgot {
     margin-top: 5rem;
     .logo {
-        @include m.gradientText(v.$cyan, v.$purple);
+        @include m.gradientText(v.$pink, v.$orange);
     }
     .container-sm{
-        @include m.highlight(v.$cyan, v.$purple);
+        @include m.highlight(v.$pink, v.$orange);
     }
     input[type="submit"] {
-        @include m.button(v.$cyan, v.$white)
+        @include m.button(v.$pink, v.$white)
     }
     .actions {
         a {
-            color: v.$cyan;
+            color: v.$pink;
         }
     }
 }
