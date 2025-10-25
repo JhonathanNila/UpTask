@@ -26,7 +26,7 @@ class LoginController {
             'title' => 'SignUp'
         ]);
     }
-    public static function forget() {
+    public static function forgot() {
         echo "From forget password";
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             

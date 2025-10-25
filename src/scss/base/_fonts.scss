@@ -19,3 +19,13 @@ p {
     color: v.$gray;
     line-height: 1.8;
 }
+.tagline {
+    font-family: v.$headings_font;
+    font-weight: 900;
+    color: v.$black;
+    font-size: 3rem;
+    text-align: center;
+}
+.description-page {
+    text-align: center;
+}

@@ -12,7 +12,7 @@ $router = new Router();
 $router->get('/', [LoginController::class, 'login']);
 $router->get('/signup', [LoginController::class, 'signup']);
 $router->get('/logout', [LoginController::class, 'logout']);
-$router->get('/forget', [LoginController::class, 'forget']);
+$router->get('/forgot', [LoginController::class, 'forgot']);
 $router->get('/reset', [LoginController::class, 'reset']);
 $router->get('/confirmation', [LoginController::class, 'confirmation']);
 $router->get('/welcome', [LoginController::class, 'welcome']);
@@ -20,7 +20,7 @@ $router->get('/welcome', [LoginController::class, 'welcome']);
 // POSTS
 $router->post('/', [LoginController::class, 'login']);
 $router->post('/signup', [LoginController::class, 'signup']);
-$router->post('/forget', [LoginController::class, 'forget']);
+$router->post('/forgot', [LoginController::class, 'forgot']);
 $router->post('/reset', [LoginController::class, 'reset']);
 
 $router->verifyRoutes();
