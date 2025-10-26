@@ -2,6 +2,7 @@
     <?php include_once __DIR__ . '/../templates/logo-name.php'; ?>
     <div class="container-sm">
         <p class="description-page">Sign up on UpTask</p>
+        <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
         <form action="/signup" class="form" method="POST">
             <div class="field">
                 <label for="NAME">Name</label>
@@ -10,6 +11,7 @@
                     name="NAME" 
                     id="NAME"
                     placeholder="Your name"
+                    value="<?php echo $user->NAME; ?>"
                 />
             </div> <!-- .field -->
             <div class="field">
@@ -19,6 +21,7 @@
                     name="EMAIL" 
                     id="EMAIL"
                     placeholder="Your Email"
+                    value="<?php echo $user->EMAIL; ?>"
                 />
             </div> <!-- .field -->
             <div class="field">
