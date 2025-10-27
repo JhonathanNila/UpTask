@@ -8,12 +8,32 @@ use MVC\Router;
 
 class LoginController {
     public static function login(Router $router) {
-        
+        $alerts = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+            $user = new User($_POST);
+            $alerts = $user->validateLogin();
+            if(empty($alerts)) {
+                $user = User::where('EMAIL', $user->EMAIL);
+                if(!$user || !$user->CONFIRMED) {
+                    User::setAlert('error', 'The user does not exist or the account is not validated');
+                } else {
+                    if(password_verify($_POST['PASSWORD'], $user->PASSWORD)){
+                        session_start();
+                        $_SESSION['ID'] = $user->ID;
+                        $_SESSION['NAME'] = $user->NAME;
+                        $_SESSION['EMAIL'] = $user->EMAIL;
+                        $_SESSION['LOGGED_IN'] = true;
+                        header('Location: /projects');
+                    } else {
+                        User::setAlert('error', 'Incorrect Email or Password');
+                    }
+                }
+            }
         }
+        $alerts = User::getAlerts();
         $router->render('auth/login', [
-            'title' => 'Login'
+            'title' => 'Login',
+            'alerts' => $alerts
         ]);
     }
     public static function logout() {

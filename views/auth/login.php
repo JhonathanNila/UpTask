@@ -3,7 +3,7 @@
     <div class="container-sm">
         <p class="description-page">Let’s get to work! Log in</p>
         <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
-        <form action="/" class="form" method="POST">
+        <form action="/" class="form" method="POST" novalidate>
             <div class="field">
                 <label for="EMAIL">Email</label>
                 <input 

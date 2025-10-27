@@ -16,6 +16,18 @@ class User extends ActiveRecord {
         $this->TOKEN = $args['TOKEN'] ?? '';
         $this->CONFIRMED = $args['CONFIRMED'] ?? 0;
     }
+    public function validateLogin() {
+        if(!$this->EMAIL) {
+            self::$alerts['error'][] = 'The User\'s Email is required';
+        }
+        if(!filter_var($this->EMAIL, FILTER_VALIDATE_EMAIL)) {
+            self::$alerts['error'][] = 'Invalid Email Format';
+        }
+        if(!$this->PASSWORD) {
+            self::$alerts['error'][] = 'The Password is required';
+        }
+        return self::$alerts;
+    }
     public function validateNewAccount() {
         if(!$this->NAME) {
             self::$alerts['error'][] = 'The User\'s Name is required';
