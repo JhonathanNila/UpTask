@@ -17,13 +17,13 @@ class LoginController {
                 if(!$user || !$user->CONFIRMED) {
                     User::setAlert('error', 'The user does not exist or the account is not validated');
                 } else {
-                    if(password_verify($_POST['PASSWORD'], $user->PASSWORD)){
+                    if(password_verify($_POST['PASSWORD'], $user->PASSWORD)) {
                         session_start();
                         $_SESSION['ID'] = $user->ID;
                         $_SESSION['NAME'] = $user->NAME;
                         $_SESSION['EMAIL'] = $user->EMAIL;
                         $_SESSION['LOGGED_IN'] = true;
-                        header('Location: /projects');
+                        header('Location: /dashboard');
                     } else {
                         User::setAlert('error', 'Incorrect Email or Password');
                     }
@@ -37,8 +37,9 @@ class LoginController {
         ]);
     }
     public static function logout() {
-        echo "From logout";
-        
+        session_start();
+        $_SESSION = [];
+        header('Location: /');
     }
     public static function signup(Router $router) {
         $user = new User;
