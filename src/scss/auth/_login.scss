@@ -7,7 +7,9 @@
         @include m.gradientText(v.$cyan, v.$purple);
     }
     .container-sm{
-        @include m.highlight(v.$cyan, v.$purple);
+        p {
+            @include m.highlight(v.$cyan, v.$purple);
+        }
     }
     input[type="submit"] {
         @include m.button(v.$cyan, v.$white)

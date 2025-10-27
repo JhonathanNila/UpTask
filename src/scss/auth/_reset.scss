@@ -6,6 +6,11 @@
     .logo {
         @include m.gradientText(v.$blue, v.$cyan);
     }
+    .container-sm {
+        p {
+            @include m.highlight(v.$blue, v.$cyan);
+        }
+    }
     input[type="submit"] {
         @include m.button(v.$blue, v.$white)
     }

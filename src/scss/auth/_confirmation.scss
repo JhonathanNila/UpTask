@@ -7,6 +7,8 @@
         @include m.gradientText(v.$green, v.$orange);
     }
     .container-sm{
-        @include m.highlight(v.$green, v.$orange);
+        p {
+            @include m.highlight(v.$green, v.$orange);
+        }
     }
 }

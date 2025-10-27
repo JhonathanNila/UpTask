@@ -34,11 +34,29 @@ class User extends ActiveRecord {
         }
         return self::$alerts;
     }
+    public function validatePassword() {
+        if(!$this->PASSWORD) {
+            self::$alerts['error'][] = 'The Password is required';
+        }
+        if(strlen($this->PASSWORD) < 6) {
+            self::$alerts['error'][] = 'The Password must contain at least 6 characters';
+        }
+        return self::$alerts;
+    }
     public function hashPassword() {
         $this->PASSWORD = password_hash($this->PASSWORD, PASSWORD_BCRYPT);
 
     }
     public function generateToken() {
         $this->TOKEN = md5(uniqid(), );
+    }
+    public function validateEmail() {
+        if(!$this->EMAIL) {
+            self::$alerts['error'][] = 'The User\'s Email is required for reseting Password';
+        }
+        if(!filter_var($this->EMAIL, FILTER_VALIDATE_EMAIL)) {
+            self::$alerts['error'][] = 'Invalid Email Format';
+        }
+        return self::$alerts;
     }
 }

@@ -2,7 +2,8 @@
     <?php include_once __DIR__ . '/../templates/logo-name.php'; ?>
     <div class="container-sm">
         <p class="description-page">Don’t remember your password? Enter your email and we’ll send you the instructions</p>
-        <form action="/forgot" class="form" method="POST">
+        <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
+        <form action="/forgot" class="form" method="POST" novalidate>
             <div class="field">
                 <label for="EMAIL">Email</label>
                 <input 

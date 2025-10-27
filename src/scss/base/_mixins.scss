@@ -53,12 +53,10 @@
         }
 }
 @mixin highlight($color1, $color2) {
-        p {
             background: linear-gradient(to right, $color1 0%, lighten($color2, 30%) 100%);
             color: transparent;
             background-clip: text;
             text-align: center;
-        }
 }
 @mixin highlightActions($color1, $color2) {
     a {

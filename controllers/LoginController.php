@@ -51,19 +51,60 @@ class LoginController {
         ]);
     }
     public static function forgot(Router $router) {
+        $alerts = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+            $user = new User($_POST);
+            $alerts = $user->validateEmail();
+            if(empty($alerts)) {
+                $user = User::where('EMAIL', $user->EMAIL);
+                if($user && $user->CONFIRMED) {
+                    $user->generateToken();
+                    unset($user->PASSWORD2);
+                    $user->save();
+                    $email = new Email($user->EMAIL, $user->NAME, $user->TOKEN);
+                    $email->sentInstructions();
+                    User::setAlert('success', 'We’ve sent the instructions to reset your Password');
+                } else {
+                    User::setAlert('error', 'The user does not exist or the account is not validated');
+                }
+            }
         }
+        $alerts = User::getAlerts();
         $router->render('auth/forgot', [
-            'title' => 'Forgot Password'
+            'title' => 'Forgot Password',
+            'alerts' => $alerts
         ]);
     }
     public static function reset(Router $router) {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+        $token = s($_GET['token']);
+        $show =  true;
+        $alerts = [];
+        if(!$token) {
+            header('Location: /');
         }
+        $user = User::where('TOKEN', $token);
+        if(empty($user)) {
+            User::setAlert('error', 'Invalid Token');
+            $show = false;
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user->sync($_POST);
+            $alerts = $user->validatePassword();
+            if(empty($alerts)) {
+                $user->hashPassword();
+                unset($user->PASSWORD2);
+                $user->TOKEN = '';
+                $result = $user->save();
+                if($result) {
+                    header('Location: /');
+                }
+            }
+        }
+        $alerts = User::getAlerts();
         $router->render('auth/reset', [
-            'title' => 'Set a new Password'
+            'title' => 'Set a new Password',
+            'alerts' => $alerts,
+            'show' => $show
         ]);
     }
     public static function confirmation(Router $router) {
