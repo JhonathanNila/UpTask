@@ -31,5 +31,7 @@ $router->get('/dashboard', [DashboardController::class, 'index']);
 $router->get('/new-project', [DashboardController::class, 'newProject']);
 $router->get('/profile', [DashboardController::class, 'profile']);
 
+// POSTS
+$router->post('/new-project', [DashboardController::class, 'newProject']);
 
 $router->verifyRoutes();
