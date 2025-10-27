@@ -11,7 +11,7 @@ function s($html) : string {
     return $s;
 }
 function isAuth() : void {
-    if(!isset($_SESSION['loggedIn'])) {
+    if(!isset($_SESSION['LOGGED_IN'])) {
         header('Location: /');
     }
 }
