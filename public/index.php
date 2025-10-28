@@ -30,6 +30,7 @@ $router->post('/reset', [LoginController::class, 'reset']);
 $router->get('/dashboard', [DashboardController::class, 'index']);
 $router->get('/new-project', [DashboardController::class, 'newProject']);
 $router->get('/profile', [DashboardController::class, 'profile']);
+$router->get('/project', [DashboardController::class, 'project']);
 
 // POSTS
 $router->post('/new-project', [DashboardController::class, 'newProject']);
