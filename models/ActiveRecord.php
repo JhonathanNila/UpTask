@@ -3,12 +3,9 @@
 namespace Model;
 
 class ActiveRecord {
-    // Database
     protected static $DB;
     protected static $table = '';
     protected static $rowsDB = [];
-
-    // Alerts and Messages
     protected static $alerts = [];
 
     // Connection to DB
@@ -18,7 +15,6 @@ class ActiveRecord {
     public static function setAlert($type, $message) {
         static::$alerts[$type][] = $message;
     }
-
     // Validation
     public static function getAlerts() {
         return static::$alerts;
@@ -27,7 +23,6 @@ class ActiveRecord {
         static::$alerts = [];
         return static::$alerts;
     }
-
     // CRUD Registres
     public function save() {
         $result = '';
@@ -51,7 +46,6 @@ class ActiveRecord {
         $result = self::consultingSQL($query);
         return array_shift( $result ) ;
     }
-
     // Get Register
     public static function get($limit) {
         $query = "SELECT * FROM " . static::$table . " LIMIT {$limit}";
@@ -63,14 +57,17 @@ class ActiveRecord {
         $result = self::consultingSQL($query);
         return array_shift( $result ) ;
     }
-
+    public static function belongsTo($column, $value) {
+        $query = "SELECT * FROM " . static::$table . " WHERE {$column} = '{$value}'";
+        $result = self::consultingSQL($query);
+        return $result;
+    }
     // SQL for advanced consults
     public static function SQL($consult) {
         $query = $consult;
         $result = self::consultingSQL($query);
         return $result;
     }
-
     // Create a new register
     public function create() {
         // Sanitize data
@@ -111,7 +108,6 @@ class ActiveRecord {
         $result = self::$DB->query($query);
         return $result;
     }
-
     // Delete register, get the ID of Active Record
     public function delete() {
         $query = "DELETE FROM "  . static::$table . " WHERE ID = " . self::$DB->escape_string($this->ID) . " LIMIT 1";

@@ -39,7 +39,7 @@
 }
 @mixin grid($columns, $space) {
     display: grid;
-    gap: $gap;
+    gap: $space;
     grid-template-columns: repeat($columns, 1fr);
 }
 @mixin gradientText($color1, $color2) {
