@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use Controllers\DashboardController;
 use Controllers\LoginController;
+use Controllers\TaskController;
 use MVC\Router;
 $router = new Router();
 
@@ -31,8 +32,12 @@ $router->get('/dashboard', [DashboardController::class, 'index']);
 $router->get('/new-project', [DashboardController::class, 'newProject']);
 $router->get('/profile', [DashboardController::class, 'profile']);
 $router->get('/project', [DashboardController::class, 'project']);
+$router->get('/api/tasks', [TaskController::class, 'index']);
 
 // POSTS
 $router->post('/new-project', [DashboardController::class, 'newProject']);
+$router->post('/api/task', [TaskController::class, 'create']);
+$router->post('/api/task/update', [TaskController::class, 'update']);
+$router->post('/api/task/delete', [TaskController::class, 'delete']);
 
 $router->verifyRoutes();
