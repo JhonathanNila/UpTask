@@ -79,13 +79,11 @@ class ActiveRecord {
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributtes));
         $query .= " ') ";
-
         // Consult result
         $result = self::$DB->query($query);
-
         return [
             'result' =>  $result,
-            'ID' => self::$DB->insert_ID
+            'ID' => self::$DB->insert_id
         ];
     }
     public function update() {
