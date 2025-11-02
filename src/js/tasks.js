@@ -1,7 +1,65 @@
 (function() {
+    getTasks();
+    let tasks = [];
     const newTaskBtn = document.querySelector('#add-task');
     newTaskBtn.addEventListener('click', showForm);
-
+    async function getTasks() {
+        try {
+            const id = getProject();
+            const url = `/api/tasks?id=${id}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            tasks = result.tasks;
+            showTasks();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    function showTasks() {
+        cleanTasks();
+        if(tasks.length === 0) {
+            const containerTasks = document.querySelector('#tasks-list');
+            const textNoTasks = document.createElement('LI');
+            textNoTasks.textContent = 'No tasks yet';
+            textNoTasks.classList.add('no-tasks');
+            containerTasks.appendChild(textNoTasks);
+            return;
+        }
+        const status = {
+            0: 'New',
+            1: 'Completed'
+        };
+        tasks.forEach(task => {
+            const containerTask = document.createElement('LI');
+            containerTask.dataset.taskId = task.ID;
+            containerTask.classList.add('task');
+            const taskName = document.createElement('P');
+            taskName.textContent = task.TASK;
+            const optionsDiv = document.createElement('DIV');
+            optionsDiv.classList.add('options');
+            const btnStatusTask = document.createElement('BUTTON');
+            btnStatusTask.classList.add('status-task');
+            btnStatusTask.classList.add(`${status[task.STATUS].toLowerCase()}`);
+            btnStatusTask.textContent = status[task.STATUS];
+            btnStatusTask.dataset.statusTask = task.STATUS;
+            const btnDeleteTask = document.createElement('BUTTON');
+            btnDeleteTask.classList.add('delete-task');
+            btnDeleteTask.dataset.taskId = task.ID;
+            btnDeleteTask.textContent = 'Delete';
+            optionsDiv.appendChild(btnStatusTask);
+            optionsDiv.appendChild(btnDeleteTask);
+            containerTask.appendChild(taskName);
+            containerTask.appendChild(optionsDiv);
+            const taskList = document.querySelector('#tasks-list');
+            taskList.appendChild(containerTask);
+        });
+    }
+    function cleanTasks() {
+        const tasksList = document.querySelector('#tasks-list');
+        while(tasksList.firstChild) {
+            tasksList.removeChild(tasksList.firstChild);
+        }
+    }
     function showForm() {
         const modal = document.createElement('DIV');
         modal.classList.add('modal');
@@ -78,13 +136,20 @@
                 body: data
             });
             const result = await response.json();
-            console.log(result);
             showAlert(result.message, result.type, document.querySelector('.form legend'));
             if(result.type === 'success') {
                 const modal = document.querySelector('.modal');
                 setTimeout(() => {
                     modal.remove();
                 }, 3000);
+                const taskObj = {
+                    ID: String(result.ID),
+                    TASK: task,
+                    STATUS: "0",
+                    PROJECT_ID: result.PROJECT_ID
+                };
+                tasks = [...tasks, taskObj];
+                showTasks();
             }
         } catch (error) {
             console.log(error);
@@ -95,5 +160,4 @@
         const project = Object.fromEntries(projectParams.entries());
         return project.id;
     }
-
 })();
