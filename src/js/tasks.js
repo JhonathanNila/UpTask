@@ -42,10 +42,15 @@
             btnStatusTask.classList.add(`${status[task.STATUS].toLowerCase()}`);
             btnStatusTask.textContent = status[task.STATUS];
             btnStatusTask.dataset.statusTask = task.STATUS;
+            btnStatusTask.ondblclick = function() {
+                changeStatusTask({...task});
+            }
+
             const btnDeleteTask = document.createElement('BUTTON');
             btnDeleteTask.classList.add('delete-task');
             btnDeleteTask.dataset.taskId = task.ID;
             btnDeleteTask.textContent = 'Delete';
+
             optionsDiv.appendChild(btnStatusTask);
             optionsDiv.appendChild(btnDeleteTask);
             containerTask.appendChild(taskName);
@@ -149,6 +154,46 @@
                     PROJECT_ID: result.PROJECT_ID
                 };
                 tasks = [...tasks, taskObj];
+                showTasks();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    function changeStatusTask(task) {
+        const newStatus = task.STATUS === "1" ? "0" : "1";
+        task.STATUS = newStatus;
+        updateTask(task);
+    }
+    async function updateTask(task) {
+        const {ID, PROJECT_ID, STATUS, TASK} = task;
+        const data = new FormData();
+        data.append('ID', ID);
+        data.append('STATUS', STATUS);
+        data.append('TASK', TASK);
+        data.append('PROJECT_ID', getProject());
+        // for(let value of data.values()) {
+        //     console.log(value);
+        // }
+        try {
+            const url = 'http://localhost:3000/api/task/update';
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+            const result = await response.json();
+            if(result.response.type === 'success') {
+                showAlert(
+                    result.response.message, 
+                    result.response.type, 
+                    document.querySelector('.container-new-task')
+                );
+                tasks = tasks.map(memoryTask => {
+                    if(memoryTask.ID === ID) {
+                        memoryTask.STATUS = STATUS;
+                    }
+                    return memoryTask;
+                });
                 showTasks();
             }
         } catch (error) {
