@@ -50,6 +50,9 @@
             btnDeleteTask.classList.add('delete-task');
             btnDeleteTask.dataset.taskId = task.ID;
             btnDeleteTask.textContent = 'Delete';
+            btnDeleteTask.ondblclick = function() {
+                confirmDeleteTask({...task});
+            }
 
             optionsDiv.appendChild(btnStatusTask);
             optionsDiv.appendChild(btnDeleteTask);
@@ -194,6 +197,46 @@
                     }
                     return memoryTask;
                 });
+                showTasks();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    function confirmDeleteTask(task) {
+        Swal.fire({
+            title: "Delete tasks?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            showCancelButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteTask(task);
+            }
+        });
+    }
+    async function deleteTask(task) {
+        const {ID, STATUS, TASK} = task;
+        const data = new FormData();
+        data.append('ID', ID);
+        data.append('STATUS', STATUS);
+        data.append('TASK', TASK);
+        data.append('PROJECT_ID', getProject());
+        try {
+            const url = 'http://localhost:3000/api/task/delete';
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+            const result = await response.json();
+            if(result.result) {
+                // showAlert(
+                //     result.message, 
+                //     result.type, 
+                //     document.querySelector('.container-new-task')
+                // );
+                Swal.fire('Task Deleted!', result.message, 'success');
+                tasks = tasks.filter(memoryTask => memoryTask.ID !== task.ID);
                 showTasks();
             }
         } catch (error) {
