@@ -2,7 +2,9 @@
     getTasks();
     let tasks = [];
     const newTaskBtn = document.querySelector('#add-task');
-    newTaskBtn.addEventListener('click', showForm);
+    newTaskBtn.addEventListener('click', function() {
+        showForm(false);
+    });
     async function getTasks() {
         try {
             const id = getProject();
@@ -33,10 +35,16 @@
             const containerTask = document.createElement('LI');
             containerTask.dataset.taskId = task.ID;
             containerTask.classList.add('task');
+
             const taskName = document.createElement('P');
             taskName.textContent = task.TASK;
+            taskName.ondblclick = function() {
+                showForm(true, {...task});
+            }
+
             const optionsDiv = document.createElement('DIV');
             optionsDiv.classList.add('options');
+
             const btnStatusTask = document.createElement('BUTTON');
             btnStatusTask.classList.add('status-task');
             btnStatusTask.classList.add(`${status[task.STATUS].toLowerCase()}`);
@@ -68,25 +76,26 @@
             tasksList.removeChild(tasksList.firstChild);
         }
     }
-    function showForm() {
+    function showForm(edit = false, task={}) {
         const modal = document.createElement('DIV');
         modal.classList.add('modal');
         modal.innerHTML = `
         <form class="form new-task">
-            <legend>Add a New Task</legend>
+            <legend>${edit ? 'Edit Task' : 'Add a New Task'}</legend>
                 <div class="field">
                     <label for="TASK">Task</label>
                     <input 
                         type="text" 
                         name="TASK" 
                         id="TASK"
-                        placeholder="New Task"
+                        placeholder="${task.TASK ? 'Edit Task' : 'Add a New Task'}"
+                        value="${task.TASK ? task.TASK : ''}"
                     />
                 </div>
                 <div class="options">
                     <input 
                         type="submit" 
-                        value="Add Task" 
+                        value="${task.TASK ? 'Save Change' : 'Add Task'}"
                         class="submit-new-task"
                     />
                     <button type="button" class="close-modal">Cancel</button>
@@ -107,18 +116,20 @@
                 }, 1000);
             }
             if(e.target.classList.contains('submit-new-task')) {
-                submitNewTaskForm();
+                const nameTask = document.querySelector('#TASK').value.trim();
+                if(nameTask === '') {
+                    showAlert('The name task is required', 'error', document.querySelector('.form legend'));
+                    return;
+                }
+                if(edit) {
+                    task.TASK = nameTask;
+                    updateTask(task);
+                } else {
+                    addTask(nameTask);
+                }
             }
         });
         document.querySelector('.dashboard').appendChild(modal);
-    }
-    function submitNewTaskForm() {
-        const task = document.querySelector('#TASK').value.trim();
-        if(task === '') {
-            showAlert('The name task is required', 'error', document.querySelector('.form legend'));
-            return;
-        }
-        addTask(task);
     }
     function showAlert(message, type, reference) {
         const previousAlert = document.querySelector('.alert');
@@ -186,14 +197,19 @@
             });
             const result = await response.json();
             if(result.response.type === 'success') {
-                showAlert(
-                    result.response.message, 
-                    result.response.type, 
-                    document.querySelector('.container-new-task')
+                Swal.fire(
+                    result.response.message,
+                    '',
+                    'success'
                 );
+                const modal = document.querySelector('.modal');
+                if(modal) {
+                    modal.remove();
+                }
                 tasks = tasks.map(memoryTask => {
                     if(memoryTask.ID === ID) {
                         memoryTask.STATUS = STATUS;
+                        memoryTask.TASK = TASK;
                     }
                     return memoryTask;
                 });
