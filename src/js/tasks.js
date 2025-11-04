@@ -1,10 +1,24 @@
 (function() {
     getTasks();
     let tasks = [];
+    let filtered = [];
     const newTaskBtn = document.querySelector('#add-task');
     newTaskBtn.addEventListener('click', function() {
         showForm(false);
     });
+    const filters = document.querySelectorAll('#filters input[type="radio"]');
+    filters.forEach(radio => {
+        radio.addEventListener('input', filterTask);
+    });
+    function filterTask(e) {
+        const filter = e.target.value;
+        if(filter !== '') {
+            filtered = tasks.filter(task => task.STATUS === filter);
+        } else {
+            filtered = [];
+        }
+        showTasks();
+    }
     async function getTasks() {
         try {
             const id = getProject();
@@ -19,7 +33,10 @@
     }
     function showTasks() {
         cleanTasks();
-        if(tasks.length === 0) {
+        totalNew();
+        totalCompleted();
+        const taskArray = filtered.length ? filtered : tasks;
+        if(taskArray.length === 0) {
             const containerTasks = document.querySelector('#tasks-list');
             const textNoTasks = document.createElement('LI');
             textNoTasks.textContent = 'No tasks yet';
@@ -31,7 +48,7 @@
             0: 'New',
             1: 'Completed'
         };
-        tasks.forEach(task => {
+        taskArray.forEach(task => {
             const containerTask = document.createElement('LI');
             containerTask.dataset.taskId = task.ID;
             containerTask.classList.add('task');
@@ -69,6 +86,24 @@
             const taskList = document.querySelector('#tasks-list');
             taskList.appendChild(containerTask);
         });
+    }
+    function totalNew() {
+        const totalNew = tasks.filter(task => task.STATUS === "0");
+        const newRadio = document.querySelector('#new');
+        if(totalNew.length === 0) {
+            newRadio.disabled = true;
+        } else {
+            newRadio.disabled = false;
+        }
+    }
+    function totalCompleted() {
+        const totalCompleted = tasks.filter(task => task.STATUS === "1");
+        const completedRadio = document.querySelector('#completed');
+        if(totalCompleted.length === 0) {
+            completedRadio.disabled = true;
+        } else {
+            completedRadio.disabled = false;
+        }
     }
     function cleanTasks() {
         const tasksList = document.querySelector('#tasks-list');
