@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Project;
+use Model\User;
 use MVC\Router;
 
 class DashboardController {
@@ -56,8 +57,58 @@ class DashboardController {
     public static function profile(Router $router) {
         session_start();
         isAuth();
+        $alerts = [];
+        $user = User::find($_SESSION['ID']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user->sync($_POST);
+            $alerts = $user->validateProfile();
+            if(empty($alerts)) {
+                $userExists = User::where('EMAIL', $user->EMAIL);
+                if($userExists && $userExists->ID !== $user->ID) {
+                    User::setAlert('error', 'Email registered with another user');
+                } else {
+                    $user->save();
+                    User::setAlert('success', 'Changes Saved Correctly');
+                    $_SESSION['NAME'] = $user->NAME;
+                }
+            }
+            $alerts = $user->getAlerts();
+        }
         $router->render('dashboard/profile', [
-            'title' => 'Profile'
+            'title' => 'Profile',
+            'user' => $user,
+            'alerts' => $alerts
+        ]);
+    }
+    public static function changePassword(Router $router) {
+        session_start();
+        $alerts = [];
+        isAuth();
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user = User::find($_SESSION['ID']);
+            $user->sync($_POST);
+            $alerts = $user->newPassword();
+            if(empty($alerts)) {
+                $result = $user->passwordVerify();
+                if($result) {
+                    $user->PASSWORD = $user->PASSWORD_NEW;
+                    unset($user->PASSWORD2);
+                    unset($user->PASSWORD_CURRENT);
+                    unset($user->PASSWORD_NEW);
+                    $user->hashPassword();
+                    $result = $user->save();
+                    if($result) {
+                        User::setAlert('success', 'New password set successfully');
+                    }
+                } else {
+                    User::setAlert('error', 'Incorrect Current Password');
+                }
+            }
+            $alerts = $user->getAlerts();
+        }
+        $router->render('dashboard/changePassword', [
+            'title' => 'Change Password',
+            'alerts' => $alerts
         ]);
     }
 }

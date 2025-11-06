@@ -13,6 +13,8 @@ class User extends ActiveRecord {
         $this->EMAIL = $args['EMAIL'] ?? '';
         $this->PASSWORD = $args['PASSWORD'] ?? '';
         $this->PASSWORD2 = $args['PASSWORD2'] ?? '';
+        $this->PASSWORD_CURRENT = $args['PASSWORD_CURRENT'] ?? '';
+        $this->PASSWORD_NEW = $args['PASSWORD_NEW'] ?? '';
         $this->TOKEN = $args['TOKEN'] ?? '';
         $this->CONFIRMED = $args['CONFIRMED'] ?? 0;
     }
@@ -55,6 +57,15 @@ class User extends ActiveRecord {
         }
         return self::$alerts;
     }
+    public function validateProfile() {
+        if(!$this->NAME) {
+            self::$alerts['error'][] = 'The Name is required';
+        }
+        if(!$this->EMAIL) {
+            self::$alerts['error'][] = 'The Email is required';
+        }
+        return self::$alerts;
+    }
     public function hashPassword() {
         $this->PASSWORD = password_hash($this->PASSWORD, PASSWORD_BCRYPT);
 
@@ -70,5 +81,23 @@ class User extends ActiveRecord {
             self::$alerts['error'][] = 'Invalid Email Format';
         }
         return self::$alerts;
+    }
+    public function newPassword() {
+        if(!$this->PASSWORD_CURRENT) {
+            self::$alerts['error'][] = 'The Current Password is required';
+        }
+        if(strlen($this->PASSWORD_CURRENT) < 6) {
+            self::$alerts['error'][] = 'The Current Password must contain at least 6 characters';
+        }
+        if(!$this->PASSWORD_NEW) {
+            self::$alerts['error'][] = 'The New Password is required';
+        }
+        if(strlen($this->PASSWORD_NEW) < 6) {
+            self::$alerts['error'][] = 'The New Password must contain at least 6 characters';
+        }
+        return self::$alerts;
+    }
+    public function passwordVerify() {
+        return password_verify($this->PASSWORD_CURRENT, $this->PASSWORD);
     }
 }
