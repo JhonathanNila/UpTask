@@ -1,0 +1,109 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+@media (prefers-color-scheme: dark) {
+    $dark_gray: #2C2C3B;
+    body {
+        background-color: $dark_gray;
+    }
+    .tagline,
+    .form,
+    .form .field input,
+    .login .actions a,
+    .signup .actions a,
+    .forgot .actions a,
+    .name-page {
+        color: v.$white;
+    }
+    .form .field input {
+        background-color: lighten($dark_gray, 15%);
+        &::placeholder {
+            color: darken(v.$lightGray, 30%);
+        }
+    }
+    .alert.error,
+    .alert.success{
+        background-color: v.$white;
+    }
+    .sidebar {
+        @include m.tablet {
+            background-color: darken($dark_gray, 5%);
+        }
+        .sidebar-nav a {
+            &.active,
+            &:hover {
+                background-color: v.$orange;
+            }
+        }
+    }
+    .mobile-bar,
+    .bar {
+        background-color: darken($dark_gray, 7%);
+    }
+    .bar {
+        p {
+            color: v.$orange;
+            span {
+                color: v.$lightGray;
+            }
+        }
+        .logout {
+            @include m.button(v.$orange, v.$white);
+            padding: 1rem;
+            font-size: 1.4rem;
+        }
+    }
+    .filters {
+        background-color: lighten($dark_gray, 10%);
+        h2,
+        label {
+            color: v.$white;
+        }
+        .field input[type="radio"] {
+            accent-color: v.$orange;
+        }
+    }
+    .dashboard {
+        background-color: $dark_gray;
+        .link {
+            color: v.$white;
+            &:hover {
+                color: darken(v.$lightGray, 20%);
+            }
+        }
+        .form input:not([type="submit"]) {
+            background-color: lighten($dark_gray, 20%);
+            color: v.$white;
+            &::placeholder {
+                color: darken(v.$lightGray, 20%);
+            }
+        }
+    }
+    .projects-list .project {
+        background-color: lighten($dark_gray, 20%);
+        &:hover {
+            background-color: lighten($dark_gray, 15%);
+        }
+    }
+    .tasks-list .task {
+        background-color: lighten($dark_gray, 10%);
+        border: none;
+        p {
+            color: v.$lightGray;
+        }
+    }
+    .form.new-task {
+        background-color: $dark_gray;
+        input[type="text"] {
+            background-color: lighten($dark_gray, 20%);
+            border: none;
+            color: v.$white;
+            &::placeholder {
+                color: darken(v.$lightGray, 20%);
+            }
+        }
+        legend {
+            color: v.$lightGray;
+        }
+    }
+}
